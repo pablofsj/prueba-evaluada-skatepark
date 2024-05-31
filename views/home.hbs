@@ -1,0 +1,73 @@
+<div class="py-4">
+      <h2 class="my-3" >Lista de participantes</h2>
+
+      <hr />
+
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Foto</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Años de experiencia</th>
+            <th scope="col">Especialidad</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody class="skaters">
+          <tr>
+            <th scope="row">1</th>
+            <td><div></div></td>
+            <td>Tony Hawk</td>
+            <td>12</td>
+            <td>Kickflip</td>
+            <td class="text-success font-weight-bold">Aprobado</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td><div></div></td>
+            <td>Evelien Bouilliart</td>
+            <td>10</td>
+            <td>Heelflip</td>
+            <td class="text-success font-weight-bold">Aprobado</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td><div></div></td>
+            <td>Danny Way</td>
+            <td>8</td>
+            <td>Ollie</td>
+            <td class="text-warning font-weight-bold">En revisión</td>
+          </tr>
+        </tbody>
+      </table>
+      <a href="/login">Iniciar Sesión</a> |
+      <a href="/registro">Registrarme</a> |
+      <a href="/admin">Administración</a>
+      <script>
+        
+       
+        const getSkaters = async () => {
+          const response = await axios.get("http://localhost:3000/skaters");
+          const skatersTable = document.querySelector(".skaters")
+          const skaters = response.data
+          skatersTable.innerHTML = ""
+
+          skaters.forEach((skater) => {
+            skatersTable.insertAdjacentHTML('afterend', `
+              <tr>
+                <td>${skater.id}</td>
+                <td><img src="img/${skater.foto}.jpeg" alt="imagen de perfil skater"></td>
+                <td>${skater.nombre}</td>
+                <td>${skater.anos_experiencia}</td>
+                <td>${skater.especialidad}</td>
+                <td>${skater.estado}</td>
+            </tr>
+          `);
+          });
+        };
+
+        getSkaters()
+
+      </script>     
+</div>
