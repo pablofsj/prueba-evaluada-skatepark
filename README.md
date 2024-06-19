@@ -28,4 +28,4 @@ Para ejecutar el proyecto de express utilizando nodemon, usar el siguiente coman
 
 ## 3. Info
 
-Se hace necesario crear las tablas correspondientes indicadas en la ruta database/query.sql , asi como poblarla con los seeders necesarios, tambien se incluyen las credenciales de esos seeders para hacer las pruebas necesarias en la aplicacion
+Se hace necesario crear la base de datos y tabla correspondientes indicadas en la ruta database/query.sql , asi como poblarla con los seeders necesarios, tambien se incluyen las credenciales de esos seeders para hacer las pruebas necesarias en la aplicacion
