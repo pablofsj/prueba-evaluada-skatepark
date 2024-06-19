@@ -1,0 +1,122 @@
+<div class="py-4">
+  <h2>Datos del perfil</h2>
+  <hr class="w-50" />
+
+  <form id="perfilForm">
+    <div class="form-group row w-50 m-auto">
+      <div class="form-group col-12 col-sm-6">
+        <label>Email</label>
+        <input id="email" class="form-control m-auto" disabled />
+      </div>
+      <div class="form-group col-12 col-sm-6">
+        <label>Nombre</label>
+        <input id="nombre" class="form-control m-auto" value="Tony Hawk" />
+      </div>
+      <div class="form-group col-12 col-sm-6">
+        <label>Nueva Password</label>
+        <input id="nueva_password" type="password" class="form-control m-auto" />
+      </div>
+      <div class="form-group col-12 col-sm-6">
+        <label>Repita la nueva password</label>
+        <input id="nueva_password_repeticion" type="password" class="form-control m-auto" />
+      </div>
+      <div class="form-group col-12 col-sm-6">
+        <label>Años de experiencia</label>
+        <input id="anos_experiencia" class="form-control m-auto" value="12" />
+      </div>
+      <div class="form-group col-12 col-sm-6">
+        <label>Especialidad</label>
+        <input id="especialidad" class="form-control m-auto" value="Kickflip" />
+      </div>
+    </div>
+    <div class="mb-1">
+      <button id="actualizar" type="button" class="btn btn-primary">Actualizar</button>
+    </div>
+    <div>
+      <button id="eliminar" type="button" class="btn btn-danger">Eliminar cuenta</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const email = document.querySelector("#email");
+  const nombre = document.querySelector("#nombre");
+  const anos_experiencia = document.querySelector("#anos_experiencia");
+  const especialidad = document.querySelector("#especialidad");
+  const nueva_password = document.querySelector("#nueva_password");
+  const nueva_password_repeticion = document.querySelector("#nueva_password_repeticion");
+  const actualizar = document.querySelector("#actualizar");
+  const eliminar = document.querySelector("#eliminar");
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert('No existe usuario logueado, redirigiendo a login');
+    window.location.href = "/login";
+  }
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  axios.get("/api/perfil", config)
+    .then(({ data }) => {
+      email.value = data.msg.email;
+      nombre.value = data.msg.nombre;
+      anos_experiencia.value = data.msg.anos_experiencia;
+      especialidad.value = data.msg.especialidad;
+      nueva_password.value = 'nuevapassword'
+      nueva_password_repeticion.value = 'nuevapasswordrepeticion'
+    })
+    .catch((e) => console.log(e));
+
+  actualizar.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    if (nueva_password.value !== nueva_password_repeticion.value) {
+      alert('La password debe coincidir');
+      return false;
+    }
+
+    const data = {
+      email: email.value,
+      nombre: nombre.value,
+      password: nueva_password.value,
+      anos_experiencia: anos_experiencia.value,
+      especialidad: especialidad.value
+    };
+
+    try {
+      await axios.put('/api/skater', data, config);
+      alert('Skater actualizado, redirigiendo al home');
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error en la actualización:", error);
+      alert('Error al actualizar: ' + error.response.data.msg);
+    }
+  });
+
+  eliminar.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.delete('/api/skater', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        data: {
+          email: email.value
+        }
+      });
+      alert('Skater eliminado, redirigiendo al home');
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error en la eliminación:", error);
+      alert('Error al eliminar: ' + error.response.data.msg);
+    }
+  });
+  
+</script>
+
+

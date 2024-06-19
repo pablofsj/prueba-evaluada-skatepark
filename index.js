@@ -5,7 +5,7 @@ import path from 'path'
 import cors from 'cors'
 import skateparkRoutes from './routes/skatepark.routes.js'
 import fileUpload from 'express-fileupload';
-import { verifyTokenJWT } from "./middlewares/jwt.middleware.js";
+
 
 
 
@@ -26,7 +26,7 @@ app.use(fileUpload({
 
 app.use('/css', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/css')))
 app.use('/js', express.static(path.join(__dirname, '/node_modules/bootstrap/dist/js')))
-app.use('/', skateparkRoutes)
+app.use('/api', skateparkRoutes)
 
 
 app.engine('.hbs', engine({extname: '.hbs'}));
@@ -48,11 +48,11 @@ app.get('/login', (_, res) => {
     res.render('login');
 });
 
-app.get('/datos', verifyTokenJWT, (_, res) => {
-    res.render('datos');
+app.get('/perfil', (_, res) => {
+    res.render('perfil');
 });
 
-app.get('/admin', verifyTokenJWT, (_, res) => {
+app.get('/admin', (_, res) => {
     res.render('admin');
 });
 

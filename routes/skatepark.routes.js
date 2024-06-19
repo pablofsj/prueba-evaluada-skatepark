@@ -2,15 +2,21 @@ import { Router } from "express";
 import { skateparkController } from "../controllers/skatepark.controller.js";
 import { verifyTokenJWT } from "../middlewares/jwt.middleware.js";
 
-
-
 const router = Router()
 
-router.get('/skaters', skateparkController.allSkaters)
+// app.use('/api', skateparkRoutes)
+router.get('/skaters', skateparkController.allSkaters) 
+router.get('/admin', skateparkController.allSkaters) 
+router.put('/admin', skateparkController.editStatusSkater) 
+
+
 router.post('/skater', skateparkController.newSkater)
+router.put('/skater', verifyTokenJWT, skateparkController.editSkater)
+router.delete('/skater', verifyTokenJWT, skateparkController.deleteSkater) 
+
 router.post('/login', skateparkController.loginSkater)
-router.put('/skater/:id', verifyTokenJWT, skateparkController.editSkater)
-router.delete('/skater/:id', verifyTokenJWT, skateparkController.deleteSkater)
+router.get('/perfil', verifyTokenJWT, skateparkController.profileSkater)  
+
 
 
 export default router

@@ -1,44 +1,74 @@
 <div class="py-4">
-      <h2>Administración</h2>
-      <hr class="w-50" />
+  <h2>Administración</h2>
+  <hr class="w-50" />
 
-      <table class="table w-50 m-auto">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Foto</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Años de experiencia</th>
-            <th scope="col">Especialidad</th>
-            <th scope="col">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td><div></div></td>
-            <td>Tony Hawk</td>
-            <td>12</td>
-            <td>Kickflip</td>
-            <td><input type="checkbox" checked /></td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td><div></div></td>
-            <td>Evelien Bouilliart</td>
-            <td>10</td>
-            <td>Heelflip</td>
-            <td><input type="checkbox" checked /></td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td><div></div></td>
-            <td>Danny Way</td>
-            <td>8</td>
-            <td>Ollie</td>
-            <td><input type="checkbox" /></td>
-          </tr>
-        </tbody>
-      </table>
+  <table class="table w-50 m-auto">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Foto</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Años de experiencia</th>
+        <th scope="col">Especialidad</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody class="skaters"></tbody>
+  </table>
 </div>
 
+<script>
+  const getSkatersAdmin = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/admin");
+      const skatersTable = document.querySelector(".skaters");
+      const skaters = response.data;
+      skatersTable.innerHTML = "";
+
+      skaters.forEach((skater) => {
+        const checkboxHTML = `<input type="checkbox" ${
+          skater.estado ? "checked" : ""
+        } data-id="${skater.email}" />`;
+
+        skatersTable.insertAdjacentHTML(
+          "beforeend",
+          `
+            <tr>
+              <td>${skater.id}</td>
+              <td><img src="img/${skater.foto}.jpeg" alt="imagen de perfil skater"></td>
+              <td>${skater.nombre}</td>
+              <td>${skater.anos_experiencia}</td>
+              <td>${skater.especialidad}</td>
+              <td>${checkboxHTML}</td>
+            </tr>
+          `
+        );
+      });
+
+      skatersTable.addEventListener("change", async (event) => {
+        if (event.target.type === "checkbox") {
+          const skaterEmail = event.target.dataset.id;
+          const newState = event.target.checked;
+
+          try {
+            await axios.put(`http://localhost:3000/api/admin`, {
+              email: skaterEmail,
+              estado: newState,
+            });
+            alert('Se ha cambiado el estado del skater')
+          } catch (error) {
+            console.error(
+              `Error al actualizar el estado del skater ${skaterEmail}:`,
+              error
+            );
+            event.target.checked = !newState;
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error al obtener los skaters:", error);
+    }
+  };
+
+  getSkatersAdmin();
+</script>

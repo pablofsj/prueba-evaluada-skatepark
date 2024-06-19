@@ -2,7 +2,7 @@
   <h2>Registro</h2>
   <hr class="w-50" />
 
-  <form id="registrationForm" action="http://localhost:3000/skater" method="POST" enctype="multipart/form-data">
+  <form id="registrationForm" action="http://localhost:3000/api/skater" method="POST" enctype="multipart/form-data">
     <div class="form-group row w-50 m-auto">
       <div class="form-group col-12 col-sm-6">
         <label>Email</label>
@@ -46,7 +46,10 @@
       if (password.value !== repite_password.value) {
         event.preventDefault();
         alert('La password debe coincidir');
+        return false
       }
+       alert('Skater registrado correctamente, redirigiendo a home');
+        window.location.href = '/';
     });
   </script>
 </div>

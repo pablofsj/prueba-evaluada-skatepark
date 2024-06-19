@@ -4,6 +4,7 @@ import path from 'path'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+
 const allSkaters = async (_,res) =>{
     try {
         const skaters = await skateparkModel.getSkaters()
@@ -63,7 +64,7 @@ const newSkater = async (req, res) =>{
         const hashed = await bcrypt.hash(password, salt);
 
 
-        const new_skater = await skateparkModel.register({ email, nombre, password: hashed, anos_experiencia, especialidad, foto: id_foto, estado: true })
+        const new_skater = await skateparkModel.register({ email, nombre, password: hashed, anos_experiencia, especialidad, foto: id_foto, estado: false })
 
         return res.redirect('/')
 
@@ -100,14 +101,12 @@ const loginSkater = async (req,res) =>{
             { expiresIn: '1h'}
         )
 
-        console.log(token)
+
 
         return res.json({
             token,
             email: user.email
-        })
-
-       
+        })  
 
     } catch (error) {
         console.log(error);
@@ -115,25 +114,54 @@ const loginSkater = async (req,res) =>{
     }
 }
 
+const profileSkater = async (req, res) => {
+    try {
 
+        const user = await skateparkModel.getSkaterByEmail(req.email)
+        return res.json({ ok: true, msg: user })
 
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error server'
+        })
+    }
+}
 
 const editSkater = async (req, res) =>{
     try {
-        const {id} = req.params
-        const {nombre, password, anos_experiencia, especialidad} = req.body
-        const edit_skater = await skateparkModel.update(id, nombre, password, anos_experiencia, especialidad)
+        
+        const {email, nombre, password, anos_experiencia, especialidad} = req.body
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt);
+        const edit_skater = await skateparkModel.update({email, nombre, password : hashed, anos_experiencia, especialidad})
         return res.json(edit_skater)
+
     } catch (error) {
         console.log(error);
         res.status(500).json( {error: 'Error interno del servidor'})   
     }
 }
 
+const editStatusSkater = async (req, res) =>{
+    try {
+        
+        const {email, estado} = req.body
+        const edit_skater_estado = await skateparkModel.updateEstado({email, estado})
+        return res.json(edit_skater_estado)
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json( {error: 'Error interno del servidor'})   
+    }
+}
+
+
 const deleteSkater = async (req,res) => {
     try {
-        const {id} = req.params
-        const remove_skater = await skateparkModel.remove(id)
+        const {email} = req.body
+        const remove_skater = await skateparkModel.remove(email)
         res.json(remove_skater)
         
     } catch (error) {
@@ -143,13 +171,13 @@ const deleteSkater = async (req,res) => {
 }
 
 
-
-
 export const skateparkController = {
     allSkaters,
     newSkater,
+    profileSkater,
     loginSkater,
     editSkater,
+    editStatusSkater,
     deleteSkater
 }
 
