@@ -1,7 +1,16 @@
 
 # Desafío Evaluado SkatePark
 
-Este proyecto consiste en un servidor Node con una interfaz HTML, diseñado para gestionar los gastos entre compañeros de piso (roommates) haciendo uso de modulo File System. Además, ofrece una API REST que permite realizar acciones como almacenar nuevos roommates al azar (randomuser), recuperar roommates almacenados, registrar nuevos gastos, obtener un historial de gastos ,modificar monto de gastos o eliminar del historial gastos existentes.
+La Municipalidad de Santiago, ha organizado una competencia de Skate para impulsar el nivel deportivo de los jóvenes que desean representar a Chile en los X Games del próximo año, y han iniciado con la gestión para desarrollar la plataforma web en la que los participantes se podrán registrar y revisar el estado de su solicitud. En esta prueba se desarrolla un sistema que
+involucra habilidades como Full Stack Developer, consolidando competencias en el frontend y backend.
+Las tecnologías y herramientas mas relevantes que aqui se ocupan son las siguientes:
+
+- Express
+- Handlebars
+- PostgreSQL
+- JWT
+- Express-fileupload
+- bcrypts
 
 ## 1. Instalación
 
